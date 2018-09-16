@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %} La Restaurant {% endblock %}
+
+{% block menu %}
+{% load query_update %}
+    <form action="">
+        Show vegan menu only <input type="checkbox", name="for_vegan">
+        Sort by:
+        <select name="sort_field">
+            <option value="rating">Популярность</option>
+            <option value="id">Новизна</option>
+            <option value="price">Цена(по возрастанию)</option>
+            <option value="-price">Цена(по убыванию)</option>
+        </select>
+        <input type="submit">
+    </form>
+
+    {% for dish in object_list %}
+       <b>{{ dish.title }} {{ dish.price }}$ allergens: {{ dish.allergens }}</b>
+       <br/>
+    {% endfor %}
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.number != 1 %}
+            <a href="?{% query_update request.GET 'page' 1 %}">first</a>
+        {% endif %}
+        {% if page_obj.has_previous %}
+            <a href="?{% query_update request.GET 'page' page_obj.previous_page_number %}">&larr;</a>
+        {% endif %}
+        <span class="current_page"> {{ page_obj.number }}</span>
+        {% if page_obj.has_next %}
+            <a href="?{% query_update request.GET 'page' page_obj.next_page_number %}">&rarr;</a>
+        {% endif %}
+        {% if page_obj.number != paginator.num_pages %}
+            <a href="?{% query_update request.GET 'page' paginator.num_pages %}">last</a>
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}
