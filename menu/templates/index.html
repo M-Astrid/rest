@@ -5,14 +5,10 @@
 {% block menu %}
 {% load query_update %}
     <form action="">
-        Show vegan menu only <input type="checkbox", name="for_vegan">
+        Show vegan menu only
+        {{ form.for_vegan }}
         Sort by:
-        <select name="sort_field">
-            <option value="rating">Популярность</option>
-            <option value="id">Новизна</option>
-            <option value="price">Цена(по возрастанию)</option>
-            <option value="-price">Цена(по убыванию)</option>
-        </select>
+        {{ form.sort_field }}
         <input type="submit">
     </form>
 

@@ -1,7 +1,7 @@
-from django.views.generic import ListView, DetailView
-from django.core.paginator import Paginator
+from django.views.generic import ListView
 
 from .models import Dish
+from .forms import SortingForm
 
 # Create your views here.
 
@@ -9,17 +9,22 @@ class DishList(ListView):
 
     template_name = 'index.html'
     model = Dish
-    paginate_by = 2
+    paginate_by = 3
 
     def dispatch(self, request, *args, **kwargs):
-        self.for_vegan = request.GET.get('for_vegan')
-        self.sort_field = request.GET.get('sort_field')
+        self.form = SortingForm(request.GET)
+        self.form.is_valid()
         return super(DishList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = Dish.objects.all()
-        if self.for_vegan:
-            queryset = queryset.filter(vegan=True)
-        if self.sort_field:
-            queryset = queryset.order_by(self.sort_field)
+        if self.form.cleaned_data.get('for_vegan'):
+            queryset = queryset.filter(vegan=self.form.cleaned_data.get('for_vegan'))
+        if self.form.cleaned_data.get('sort_field'):
+            queryset = queryset.order_by(self.form.cleaned_data.get('sort_field'))
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(DishList, self).get_context_data(**kwargs)
+        context['form'] = self.form
+        return context
