@@ -10,6 +10,7 @@ class Dish(models.Model):
     rating = models.IntegerField(verbose_name=u'Рейтинг', default=0, null=True)
     vegan = models.BooleanField(verbose_name=u'Вегетерианкое')
     allergens = models.CharField(verbose_name=u'Аллергены', max_length=64)
+    img = models.FileField(upload_to='uploads/', default='uploads/chicken.svg')
 
     def __unicode__(self):
         return self.title()
